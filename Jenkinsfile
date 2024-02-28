@@ -36,7 +36,6 @@ pipeline {
                 sh 'npm run test'
             }
         }
-        /*
         stage('SAST SonarQube') {
             agent {
               docker {
