@@ -34,6 +34,7 @@ pipeline {
             }
             steps {
                 sh 'npm run test'
+                npm install -g grunt-cli
             }
         }
         stage('SAST SonarQube') {
