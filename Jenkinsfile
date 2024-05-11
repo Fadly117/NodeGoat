@@ -47,7 +47,7 @@ pipeline {
             }
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'sonar-scanner -Dsonar.projectKey=NodeGoat -Dsonar.qualitygate.wait=true -Dsonar.sources=. -Dsonar.host.url=http://127.0.0.1:9000 -Dsonar.token=sqp_2f839e4c5ea3eb6387d2c29ae5776aa7dd0ec327' 
+                    sh 'sonar-scanner -Dsonar.projectKey=nodegoat -Dsonar.qualitygate.wait=true -Dsonar.sources=. -Dsonar.host.url=http://172.17.0.1:9000 -Dsonar.token=sqa_659605eb6acc031ca6e879f8e853e9cb6a09a1f7' 
                 }
             }
         }
