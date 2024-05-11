@@ -49,5 +49,16 @@ pipeline {
                 }
             }
         }
+        stage('Build Docker Image') {
+            agent {
+                docker {
+                    image 'docker:dind'
+                    args '--user root --network host -v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
+            steps {
+                sh 'docker build -t nodegoat:0.1 .'
+            }
+        }
    }
 }
