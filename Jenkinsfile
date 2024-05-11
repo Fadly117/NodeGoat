@@ -30,11 +30,9 @@ pipeline {
             agent {
               docker {
                   image 'node:lts-buster-slim'
-                  args '-u root --entrypoint='
               }
             }
             steps {
-                sh 'npm install -g grunt-cli'
                 sh 'npm run test'
             }
         }
