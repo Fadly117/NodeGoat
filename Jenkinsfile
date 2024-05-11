@@ -10,10 +10,10 @@ pipeline {
             }
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'trufflehog filesystem . --exclude-paths trufflehog-excluded-paths.txt --fail --json > trufflehog-scan-result.json'
+                    sh 'trufflehog filesystem . --exclude-paths trufflehog-excluded-paths.txt --fail --json > trufflehog-scan-result.txt'
                 }
-                sh 'cat trufflehog-scan-result.json'
-                archiveArtifacts artifacts: 'trufflehog-scan-result.json'
+                sh 'cat trufflehog-scan-result.txt'
+                archiveArtifacts artifacts: 'trufflehog-scan-result.txt'
             }
         }
         stage('Build') {
