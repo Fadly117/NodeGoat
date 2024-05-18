@@ -49,7 +49,7 @@ pipeline {
                 }
             }
         }
-        stage('Build Docker Image') {
+        stage('Build Docker Image and Push to Docker Registry') {
             agent {
                 docker {
                     image 'docker:dind'
@@ -57,7 +57,25 @@ pipeline {
                 }
             }
             steps {
-                sh 'docker build -t nodegoat:0.1 .'
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                sh 'docker build -t fadly31/nodegoat:0.1 .'
+                sh 'docker push fadly31/nodegoat:0.1'
+            }
+        }
+        stage('Deploy Docker Image') {
+            agent {
+                docker {
+                    image 'kroniak/ssh-client'
+                    args '--user root --network host'
+                }
+            }
+            steps {
+                withCredentials([sshUserPrivateKey(credentialsId: "DeploymentSSHKey", keyFileVariable: 'keyfile')]) {
+                    sh 'ssh -i ${keyfile} -o StrictHostKeyChecking=no jenkins@192.168.0.104 "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin"'
+                    sh 'ssh -i ${keyfile} -o StrictHostKeyChecking=no jenkins@192.168.0.104 docker pull fadly31/nodegoat:0.1'
+                    sh 'ssh -i ${keyfile} -o StrictHostKeyChecking=no jenkins@192.168.0.104 docker rm --force nodegoat'
+                    sh 'ssh -i ${keyfile} -o StrictHostKeyChecking=no jenkins@192.168.0.104 docker run -it --detach -p 4000:4000 --name nodegoat --network host fadly31/nodegoat:0.1'
+                }
             }
         }
    }
