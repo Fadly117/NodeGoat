@@ -49,7 +49,7 @@ pipeline {
             }
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'sonar-scanner -Dsonar.projectKey=nodegoat -Dsonar.qualitygate.wait=true -Dsonar.sources=. -Dsonar.host.url=http://192.168.68.127:9000 -Dsonar.token=sqp_b18d55ccf63ef9597da25e87e9f7f8f291a0131f' 
+                    sh 'sonar-scanner -Dsonar.projectKey=nodegoat -Dsonar.qualitygate.wait=true -Dsonar.sources=. -Dsonar.host.url=http://192.168.49.223:9000 -Dsonar.token=sqp_b18d55ccf63ef9597da25e87e9f7f8f291a0131f' 
                 }
             }
         }
@@ -75,10 +75,10 @@ pipeline {
             }
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: "DeploymentSSHKey", keyFileVariable: 'keyfile')]) {
-                    sh 'ssh -i ${keyfile} -o StrictHostKeyChecking=no fadly@192.168.68.127 "echo Lamongan117 | docker login -u fadly31 --password-stdin"'
-                    sh 'ssh -i ${keyfile} -o StrictHostKeyChecking=no fadly@192.168.68.127 docker pull fadly31/nodegoat'
-                    sh 'ssh -i ${keyfile} -o StrictHostKeyChecking=no fadly@192.168.68.127 docker rm --force nodegoat'
-                    sh 'ssh -i ${keyfile} -o StrictHostKeyChecking=no fadly@192.168.68.127 docker run -it --detach -p 4000:4000 --name nodegoat --network host fadly31/nodegoat'
+                    sh 'ssh -i ${keyfile} -o StrictHostKeyChecking=no fadly@192.168.49.223 "echo Lamongan117 | docker login -u fadly31 --password-stdin"'
+                    sh 'ssh -i ${keyfile} -o StrictHostKeyChecking=no fadly@192.168.49.223 docker pull fadly31/nodegoat'
+                    sh 'ssh -i ${keyfile} -o StrictHostKeyChecking=no fadly@192.168.49.223 docker rm --force nodegoat'
+                    sh 'ssh -i ${keyfile} -o StrictHostKeyChecking=no fadly@192.168.49.223 docker run -it --detach -p 4000:4000 --name nodegoat --network host fadly31/nodegoat'
                 }
             }
         }
